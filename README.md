@@ -6,6 +6,7 @@ A simple tool to create "autological sentences" for testing/fun, ie: sentences t
 eg:   
   - handily, this text has a CRC of: 00cb5f79 and a length of 61. 
   - believe it or not, this text has a CRC of: 00BEE21E
+  - Useful for testing, I happen to have a CRC value of: 01448C52 and a length of 81.
 
 
 

@@ -67,7 +67,7 @@ int main()
 
     // Search bounds
     uint32_t start = 0;
-    uint32_t length = 0x00ffffff;
+    uint32_t length = 0xffffffff;
     uint32_t bucketSize = length / numThreads;
 
     // Threads
@@ -200,40 +200,6 @@ std::string generateSentence(const int operation, const std::string & crcString)
 }
 
 /**
- * Turns loop params in testCRCThread, into useful debug text.
- */
-std::string getInfoString(long i, int operation, long hash)
-{
-    std::bitset<9> opBitset(operation);
-
-    std::ostringstream out;
-    out << "(i=" << i << ", op=" << opBitset << ", dist=" << std::dec << (hash - i) << ")";
-    return out.str();
-}
-
-/**
- * Gets the string representation of a CRC string.
- *
- * @return 8 character, 0 padded hex string.
- */
-std::string createCRCString(int crcValue, bool upperCase)
-{
-    std::ostringstream out;
-    out << std::setw(8)       // set width to 8 chars
-        << std::setfill('0')  // pad with 0's
-        << std::hex           // convert to hex
-        << crcValue;
-    std::string crcString = out.str();
-
-    // case conversion is done in place.
-    if(upperCase) {
-        for (auto & letter: crcString) letter = toupper(letter);
-    }
-
-    return crcString;
-}
-
-/**
  * Generates and tests sentences for a given CRC value range.
  * @param start_inc Start index (inclusive)
  * @param end_ex End index (exclusive)
@@ -262,8 +228,7 @@ void testSentences(const uint32_t start_inc, const uint32_t end_ex, bool reportP
             // create the crc string
             std::string crcString = createCRCString(i, c == 1);
 
-            // 'operation' changes several different branch paths.
-            // NB: Its presence in the innermost loop is problematic to the CPU's branch prediction algorithms.
+            // loop through different sentance types
             for (int operation = 0; operation < maxSentenceOperations; operation++)
             {
                 // create a sentence and calculate its cCRC
@@ -298,5 +263,40 @@ void testSentences(const uint32_t start_inc, const uint32_t end_ex, bool reportP
     std::cout << "done: " << std::dec << start_inc << " to " << end_ex
               << " in " << diff.count() << "ms" << std::endl;
 }
+
+/**
+ * Turns loop params in testCRCThread, into useful debug text.
+ */
+std::string getInfoString(long i, int operation, long hash)
+{
+    std::bitset<9> opBitset(operation);
+
+    std::ostringstream out;
+    out << "(i=" << i << ", op=" << opBitset << ", dist=" << std::dec << (hash - i) << ")";
+    return out.str();
+}
+
+/**
+ * Gets the string representation of a CRC string.
+ *
+ * @return 8 character, 0 padded hex string.
+ */
+std::string createCRCString(int crcValue, bool upperCase)
+{
+    std::ostringstream out;
+    out << std::setw(8)       // set width to 8 chars
+        << std::setfill('0')  // pad with 0's
+        << std::hex           // convert to hex
+        << crcValue;
+    std::string crcString = out.str();
+
+    // case conversion is done in place.
+    if(upperCase) {
+        for (auto & letter: crcString) letter = toupper(letter);
+    }
+
+    return crcString;
+}
+
 
 
