@@ -66,7 +66,7 @@ int main()
     }
 
     // Search bounds
-    uint32_t start = 0x00ffffff;
+    uint32_t start = 0;
     uint32_t length = 0x00ffffff;
     uint32_t bucketSize = length / numThreads;
 
